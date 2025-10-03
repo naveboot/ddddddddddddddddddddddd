@@ -1,29 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Building, 
-  Users, 
-  Settings, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  X, 
-  Save,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  UserPlus,
-  Crown,
-  Shield,
-  User as UserIcon,
-  Calendar,
-  Globe,
-  Sparkles,
-  RefreshCw,
-  Send
-} from 'lucide-react';
+import { Building, Users, Settings, Plus, CreditCard as Edit, Trash2, Mail, Phone, MapPin, X, Save, AlertCircle, CheckCircle, Loader2, UserPlus, Crown, Shield, User as UserIcon, Calendar, Globe, Sparkles, RefreshCw, Send } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useOrganization } from '../contexts/OrganizationContext';
 import { organizationService, CreateOrganizationData, UpdateOrganizationData } from '../services/organizationService';

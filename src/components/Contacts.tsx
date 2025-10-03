@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Mail, Phone, Building, MapPin, Edit, Trash2, Users, X, AlertCircle, CheckCircle, User, Loader2, Wifi, WifiOff } from 'lucide-react';
+import { Plus, Mail, Phone, Building, MapPin, CreditCard as Edit, Trash2, Users, X, AlertCircle, CheckCircle, User, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useOrganization } from '../contexts/OrganizationContext';
 import { contactService, Contact, CreateContactData, UpdateContactData } from '../services/contactService';

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { 
-  Zap, 
-  Sparkles, 
-  Users, 
-  Target, 
-  Calendar, 
-  Mail, 
-  BarChart3, 
-  Shield, 
-  Globe, 
-  ArrowRight, 
-  Check, 
+import {
+  Zap,
+  Sparkles,
+  Users,
+  Target,
+  Calendar,
+  Mail,
+  BarChart3,
+  Shield,
+  Globe,
+  ArrowRight,
+  Check,
   Star,
   X,
   Eye,
@@ -18,7 +18,8 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { authService, LoginResponse } from '../services/authService'; // Import LoginResponse
+import { authService, LoginResponse } from '../services/authService';
+import { validateEmail, validateRequired, validateMinLength } from '../utils/validation'; // Import LoginResponse
 
 interface LandingPageProps {
   onLogin: (loginResponse: LoginResponse) => void; // Expect LoginResponse
@@ -519,18 +520,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
 
             <form onSubmit={handleSignIn} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('email')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('email')} *</label>
                 <input
                   type="email"
                   value={signInData.email}
                   onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateEmail(e.target.value)) {
+                      e.target.setCustomValidity('Format d\'email invalide');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="input-modern"
                   placeholder="Entrez votre adresse email"
                   required
+                  autoComplete="email"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('password')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('password')} *</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -539,6 +548,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
                     className="input-modern pr-12"
                     placeholder="Entrez votre mot de passe"
                     required
+                    minLength={6}
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -590,7 +601,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
             <form onSubmit={handleSignUp} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t('firstName')}</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t('firstName')} *</label>
                   <input
                     type="text"
                     value={signUpData.firstName}
@@ -598,10 +609,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
                     className="input-modern"
                     placeholder="Votre prénom"
                     required
+                    minLength={2}
+                    autoComplete="given-name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t('lastName')}</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t('lastName')} *</label>
                   <input
                     type="text"
                     value={signUpData.lastName}
@@ -609,30 +622,42 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
                     className="input-modern"
                     placeholder="Votre nom"
                     required
+                    minLength={2}
+                    autoComplete="family-name"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('email')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('email')} *</label>
                 <input
                   type="email"
                   value={signUpData.email}
                   onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateEmail(e.target.value)) {
+                      e.target.setCustomValidity('Format d\'email invalide');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="input-modern"
                   placeholder="Votre adresse email professionnelle"
                   required
+                  autoComplete="email"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('password')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('password')} *</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={signUpData.password}
                     onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
                     className="input-modern pr-12"
-                    placeholder="Créez un mot de passe sécurisé"
+                    placeholder="Créez un mot de passe sécurisé (min. 6 caractères)"
                     required
+                    minLength={6}
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
@@ -644,15 +669,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('confirmPassword')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('confirmPassword')} *</label>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={signUpData.confirmPassword}
-                    onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSignUpData({ ...signUpData, confirmPassword: value });
+                      if (value && value !== signUpData.password) {
+                        e.target.setCustomValidity('Les mots de passe ne correspondent pas');
+                      } else {
+                        e.target.setCustomValidity('');
+                      }
+                    }}
                     className="input-modern pr-12"
                     placeholder="Confirmez votre mot de passe"
                     required
+                    minLength={6}
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"

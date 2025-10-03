@@ -3,6 +3,7 @@ import { Plus, Mail, Phone, Building, MapPin, Edit, Trash2, Users, X, AlertCircl
 import { useLanguage } from '../contexts/LanguageContext';
 import { useOrganization } from '../contexts/OrganizationContext';
 import { contactService, Contact, CreateContactData, UpdateContactData } from '../services/contactService';
+import { validateEmail, validatePhone, sanitizePhoneInput, validateRequired, validateMinLength } from '../utils/validation';
 
 interface ContactsProps {
   searchTerm: string;
@@ -474,6 +475,8 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Entrez le nom complet"
+                  required
+                  minLength={2}
                   disabled={operationLoading.create}
                 />
               </div>
@@ -484,8 +487,16 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateEmail(e.target.value)) {
+                      e.target.setCustomValidity('Format d\'email invalide');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Entrez l'adresse email"
+                  required
                   disabled={operationLoading.create}
                 />
               </div>
@@ -495,9 +506,19 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                 <input
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => {
+                    const sanitized = sanitizePhoneInput(e.target.value);
+                    setFormData({ ...formData, phone: sanitized });
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value && !validatePhone(e.target.value)) {
+                      e.target.setCustomValidity('Format de téléphone invalide. Utilisez uniquement des chiffres, espaces et les caractères +()-');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Entrez le numéro de téléphone"
+                  placeholder="Ex: +33 1 23 45 67 89"
                   disabled={operationLoading.create}
                 />
               </div>
@@ -604,6 +625,8 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Entrez le nom complet"
+                  required
+                  minLength={2}
                   disabled={operationLoading.update}
                 />
               </div>
@@ -614,8 +637,16 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateEmail(e.target.value)) {
+                      e.target.setCustomValidity('Format d\'email invalide');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Entrez l'adresse email"
+                  required
                   disabled={operationLoading.update}
                 />
               </div>
@@ -625,9 +656,19 @@ const Contacts: React.FC<ContactsProps> = ({ searchTerm }) => {
                 <input
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => {
+                    const sanitized = sanitizePhoneInput(e.target.value);
+                    setFormData({ ...formData, phone: sanitized });
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value && !validatePhone(e.target.value)) {
+                      e.target.setCustomValidity('Format de téléphone invalide. Utilisez uniquement des chiffres, espaces et les caractères +()-');
+                    } else {
+                      e.target.setCustomValidity('');
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Entrez le numéro de téléphone"
+                  placeholder="Ex: +33 1 23 45 67 89"
                   disabled={operationLoading.update}
                 />
               </div>

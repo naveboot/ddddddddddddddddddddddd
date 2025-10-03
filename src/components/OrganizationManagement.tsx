@@ -28,6 +28,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useOrganization } from '../contexts/OrganizationContext';
 import { organizationService, CreateOrganizationData, UpdateOrganizationData } from '../services/organizationService';
 import { authService } from '../services/authService';
+import { validateEmail, validatePhone, sanitizePhoneInput } from '../utils/validation';
 
 const OrganizationManagement: React.FC = () => {
   const { t } = useLanguage();
